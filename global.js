@@ -5,23 +5,26 @@ function $$(selector, context = document) {
 }
 
 const pages = [
-  { url: "", title: "Home" },
-  { url: "projects/", title: "Projects" },
-  { url: "contact/", title: "Contact" },
+  { url: "index.html", title: "Home" },
+  { url: "projects/index.html", title: "Projects" },
+  { url: "contact/index.html", title: "Contact" },
   { url: "resume.html", title: "Resume" },
   { url: "https://github.com/kagastyaraju", title: "GitHub" },
 ];
 
-const ARE_WE_HOME = document.documentElement.classList.contains("home");
-console.log("Are we on the home page? ", ARE_WE_HOME);
+const currentPathDepth = location.pathname.split("/").length - 2;
+const ARE_WE_HOME = location.pathname.endsWith("index.html") && currentPathDepth === 0;
 
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
 for (let p of pages) {
-  let depth = location.pathname.split("/").length - 2;
-  let prefix = "../".repeat(depth);
-  let url = !ARE_WE_HOME && !p.url.startsWith("http") ? prefix + p.url : p.url;
+  let url = p.url;
+
+  if (!ARE_WE_HOME && !p.url.startsWith("http")) {
+    const prefix = "../".repeat(currentPathDepth);
+    url = prefix + p.url;
+  }
 
   let a = document.createElement("a");
   a.href = url;
