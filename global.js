@@ -4,19 +4,7 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-// Old Code: Commented Out
-// This part manually finds and highlights the current page link.
-// Commenting it out since the new navigation automation handles this.
-// 
-// let navLinks = $$("nav a");
-// let currentLink = navLinks.find(
-//   (a) => a.host === location.host && a.pathname === location.pathname
-// );
-// currentLink?.classList.add("current");
-
-// New Code: Automated Navigation and Highlighting
-
-// Define the pages array
+// Pages array for navigation
 const pages = [
   { url: "", title: "Home" },
   { url: "projects/", title: "Projects" },
@@ -27,17 +15,16 @@ const pages = [
 
 // Check if we are on the home page
 const ARE_WE_HOME = document.documentElement.classList.contains("home");
+console.log("Are we on the home page? ", ARE_WE_HOME);
 
-// Create the navigation bar
+// Create and insert the navigation bar
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
-// Add navigation links
 for (let p of pages) {
-  // Adjust URL for relative paths if not on the home page
   let url = !ARE_WE_HOME && !p.url.startsWith("http") ? "../" + p.url : p.url;
 
-  // Create the link element
+  // Create a link element
   let a = document.createElement("a");
   a.href = url;
   a.textContent = p.title;
@@ -57,11 +44,10 @@ for (let p of pages) {
   nav.append(a);
 }
 
-
 // Add the dark mode switcher at the top of the page
 document.body.insertAdjacentHTML(
-    "afterbegin",
-    `
+  "afterbegin",
+  `
     <label class="color-scheme">
       Theme:
       <select id="theme-select">
@@ -69,11 +55,10 @@ document.body.insertAdjacentHTML(
         <option value="light">Light</option>
         <option value="dark">Dark</option>
       </select>
-    </label>
-  `
-  );
+    </label>`
+);
 
-  // Get references to the root element and the select dropdown
+// Get references to the root element and the select dropdown
 const root = document.documentElement;
 const select = document.querySelector("#theme-select");
 
@@ -95,5 +80,3 @@ if ("colorScheme" in localStorage) {
 } else {
   setColorScheme("light dark"); // Default to automatic
 }
-
-  
