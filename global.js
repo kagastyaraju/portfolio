@@ -1,32 +1,43 @@
 console.log("IT’S ALIVE!");
 
+function $$(selector, context = document) {
+  return Array.from(context.querySelectorAll(selector));
+}
+
+// Old Code: Commented Out
+// This part manually finds and highlights the current page link.
+// Commenting it out since the new navigation automation handles this.
+// 
+// let navLinks = $$("nav a");
+// let currentLink = navLinks.find(
+//   (a) => a.host === location.host && a.pathname === location.pathname
+// );
+// currentLink?.classList.add("current");
+
+// New Code: Automated Navigation and Highlighting
+
+// Define the pages array
 const pages = [
-  { url: "index.html", title: "Home" },
-  { url: "projects/index.html", title: "Projects" },
-  { url: "contact/index.html", title: "Contact" },
+  { url: "", title: "Home" },
+  { url: "projects/", title: "Projects" },
+  { url: "contact/", title: "Contact" },
   { url: "resume.html", title: "Resume" },
   { url: "https://github.com/kagastyaraju", title: "GitHub" },
 ];
 
-// Detect if we are on the home page
-const ARE_WE_HOME = location.pathname.endsWith("index.html") || location.pathname === "/";
+// Check if we are on the home page
+const ARE_WE_HOME = document.documentElement.classList.contains("home");
 
-// Create and insert the navigation bar
+// Create the navigation bar
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
-// Generate navigation links dynamically
+// Add navigation links
 for (let p of pages) {
-  let url = p.url;
+  // Adjust URL for relative paths if not on the home page
+  let url = !ARE_WE_HOME && !p.url.startsWith("http") ? "../" + p.url : p.url;
 
-  // Adjust relative paths if not on the home page
-  if (!ARE_WE_HOME && !url.startsWith("http")) {
-    const depth = location.pathname.split("/").length - 2; // Calculate the directory depth
-    const prefix = "../".repeat(depth);
-    url = prefix + url;
-  }
-
-  // Create the anchor element
+  // Create the link element
   let a = document.createElement("a");
   a.href = url;
   a.textContent = p.title;
@@ -42,43 +53,6 @@ for (let p of pages) {
     a.target = "_blank";
   }
 
-  // Append the link to the navigation bar
+  // Add the link to the navigation bar
   nav.append(a);
-}
-
-// Add a dark mode switcher at the top of the page
-document.body.insertAdjacentHTML(
-  "afterbegin",
-  `
-    <label class="color-scheme">
-      Theme:
-      <select id="theme-select">
-        <option value="light dark">Automatic</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </label>`
-);
-
-// Get references to the root element and the select dropdown
-const root = document.documentElement;
-const select = document.querySelector("#theme-select");
-
-// Function to set the color scheme
-function setColorScheme(colorScheme) {
-  root.style.setProperty("color-scheme", colorScheme);
-  localStorage.colorScheme = colorScheme;
-  select.value = colorScheme;
-}
-
-// Event listener for when the user changes the theme
-select.addEventListener("input", (event) => {
-  setColorScheme(event.target.value);
-});
-
-// Load the user's preference from localStorage on page load
-if ("colorScheme" in localStorage) {
-  setColorScheme(localStorage.colorScheme);
-} else {
-  setColorScheme("light dark");
 }
