@@ -6,15 +6,15 @@ function $$(selector, context = document) {
 
 // Pages array for navigation
 const pages = [
-  { url: "", title: "Home" },
-  { url: "projects/", title: "Projects" },
-  { url: "contact/", title: "Contact" },
+  { url: "index.html", title: "Home" },
+  { url: "projects/index.html", title: "Projects" },
+  { url: "contact/index.html", title: "Contact" },
   { url: "resume.html", title: "Resume" },
   { url: "https://github.com/kagastyaraju", title: "GitHub" },
 ];
 
 // Check if we are on the home page
-const ARE_WE_HOME = document.documentElement.classList.contains("home");
+const ARE_WE_HOME = location.pathname.endsWith("index.html") || location.pathname === "/";
 console.log("Are we on the home page? ", ARE_WE_HOME);
 
 // Create and insert the navigation bar
@@ -48,9 +48,9 @@ for (let p of pages) {
 document.body.insertAdjacentHTML(
   "afterbegin",
   `
-    <label class="color-scheme">
+    <label class="color-scheme" style="position: absolute; top: 1rem; right: 1rem; font-size: 0.9rem;">
       Theme:
-      <select id="theme-select">
+      <select id="theme-select" style="margin-left: 0.5rem;">
         <option value="light dark">Automatic</option>
         <option value="light">Light</option>
         <option value="dark">Dark</option>
