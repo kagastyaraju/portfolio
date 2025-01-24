@@ -4,29 +4,17 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-// Old Code: Commented Out
-// This part manually finds and highlights the current page link.
-// Commenting it out since the new navigation automation handles this.
-// 
-// let navLinks = $$("nav a");
-// let currentLink = navLinks.find(
-//   (a) => a.host === location.host && a.pathname === location.pathname
-// );
-// currentLink?.classList.add("current");
-
-// New Code: Automated Navigation and Highlighting
-
 // Define the pages array
 const pages = [
-  { url: "", title: "Home" },
-  { url: "projects/", title: "Projects" },
-  { url: "contact/", title: "Contact" },
+  { url: "index.html", title: "Home" },
+  { url: "projects/index.html", title: "Projects" },
+  { url: "contact/index.html", title: "Contact" },
   { url: "resume.html", title: "Resume" },
   { url: "https://github.com/kagastyaraju", title: "GitHub" },
 ];
 
 // Check if we are on the home page
-const ARE_WE_HOME = document.documentElement.classList.contains("home");
+const ARE_WE_HOME = location.pathname.endsWith("index.html") || location.pathname === "/";
 
 // Create the navigation bar
 let nav = document.createElement("nav");
@@ -55,4 +43,41 @@ for (let p of pages) {
 
   // Add the link to the navigation bar
   nav.append(a);
+}
+
+// Add the dark mode switcher at the top of the page
+document.body.insertAdjacentHTML(
+  "afterbegin",
+  `
+    <label class="color-scheme">
+      Theme:
+      <select id="theme-select">
+        <option value="light dark">Automatic</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>`
+);
+
+// Get references to the root element and the select dropdown
+const root = document.documentElement;
+const select = document.querySelector("#theme-select");
+
+// Function to set the color scheme
+function setColorScheme(colorScheme) {
+  root.style.setProperty("color-scheme", colorScheme); // Set CSS color-scheme
+  localStorage.colorScheme = colorScheme; // Save preference in localStorage
+  select.value = colorScheme; // Update dropdown
+}
+
+// Event listener for when the user changes the theme
+select.addEventListener("input", (event) => {
+  setColorScheme(event.target.value);
+});
+
+// Load the user's preference from localStorage on page load
+if ("colorScheme" in localStorage) {
+  setColorScheme(localStorage.colorScheme);
+} else {
+  setColorScheme("light dark"); // Default to automatic
 }
