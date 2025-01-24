@@ -1,9 +1,5 @@
 console.log("IT’S ALIVE!");
 
-function $$(selector, context = document) {
-  return Array.from(context.querySelectorAll(selector));
-}
-
 const pages = [
   { url: "index.html", title: "Home" },
   { url: "projects/index.html", title: "Projects" },
@@ -12,19 +8,13 @@ const pages = [
   { url: "https://github.com/kagastyaraju", title: "GitHub" },
 ];
 
-const currentPathDepth = location.pathname.split("/").length - 2;
-const ARE_WE_HOME = location.pathname.endsWith("index.html") && currentPathDepth === 0;
+const ARE_WE_HOME = document.documentElement.classList.contains("home");
 
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
 for (let p of pages) {
-  let url = p.url;
-
-  if (!ARE_WE_HOME && !p.url.startsWith("http")) {
-    const prefix = "../".repeat(currentPathDepth);
-    url = prefix + p.url;
-  }
+  let url = !ARE_WE_HOME && !p.url.startsWith("http") ? "../" + p.url : p.url;
 
   let a = document.createElement("a");
   a.href = url;
