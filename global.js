@@ -67,20 +67,3 @@ if ("colorScheme" in localStorage) {
 } else {
   setColorScheme("light dark"); // Default to automatic
 }
-
-// Adding form submission handler for contact page
-const form = document.querySelector("#contact-form");
-
-form?.addEventListener("submit", (event) => {
-  event.preventDefault(); // Prevent default form submission
-
-  const data = new FormData(form);
-  let url = form.action + "?";
-
-  for (let [name, value] of data) {
-    url += `${encodeURIComponent(name)}=${encodeURIComponent(value)}&`;
-  }
-
-  url = url.slice(0, -1); // Remove trailing '&'
-  location.href = url; // Open email client with encoded URL
-});

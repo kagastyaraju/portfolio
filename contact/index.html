@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,10 @@
     <h1>Contact Page</h1>
     <p>Please fill out the form below to contact</p>
 
-    <form id="contact-form" action="mailto:kagastyaraju@ucsd.edu" method="GET">
+    <form action="mailto:kagastyaraju@ucsd.edu" method="POST" enctype="text/plain">
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
         <label for="subject">Subject:</label>
         <input type="text" id="subject" name="subject" required>
 
@@ -21,31 +24,6 @@
         <button type="submit">Send Message</button>
     </form>
 
-    <script>
-        // Get a reference to the form element
-        const form = document.querySelector("#contact-form");
-
-        // Add an event listener for the submit event
-        form?.addEventListener("submit", (event) => {
-            event.preventDefault(); // Prevent the default form submission
-
-            // Create a new FormData object from the form
-            const data = new FormData(form);
-
-            // Start building the mailto URL
-            let url = form.action + "?";
-
-            // Iterate over the form fields and encode their values
-            for (let [name, value] of data) {
-                url += `${encodeURIComponent(name)}=${encodeURIComponent(value)}&`;
-            }
-
-            // Remove the trailing '&' from the URL
-            url = url.slice(0, -1);
-
-            // Open the email client with the prefilled fields
-            location.href = url;
-        });
-    </script>
+    <script src="../global.js" type="module"></script>
 </body>
 </html>
