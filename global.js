@@ -67,3 +67,29 @@ if ("colorScheme" in localStorage) {
 } else {
   setColorScheme("light dark"); // Default to automatic
 }
+
+
+// Fetch JSON data
+export async function fetchJSON(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch: ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+// Render projects
+export function renderProjects(projects, container, headingLevel = 'h2') {
+  container.innerHTML = ''; // Clear existing content
+  projects.forEach(project => {
+    const article = document.createElement('article');
+    article.innerHTML = `
+      <${headingLevel}>${project.title}</${headingLevel}>
+      <img src="${project.image}" alt="${project.title}">
+      <p>${project.description}</p>
+    `;
+    container.appendChild(article);
+  });
+}
