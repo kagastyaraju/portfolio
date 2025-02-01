@@ -82,7 +82,7 @@ export async function fetchJSON(url) {
 
 // Render projects
 export function renderProjects(projects, container, headingLevel = 'h2') {
-  container.innerHTML = ''; // Clear existing content
+  containerElement.innerHTML = ''; // Clear existing content
   projects.forEach(project => {
     const article = document.createElement('article');
     article.innerHTML = `
@@ -92,4 +92,8 @@ export function renderProjects(projects, container, headingLevel = 'h2') {
     `;
     container.appendChild(article);
   });
+}
+
+export async function fetchGitHubData(kagastyaraju) {
+  return fetchJSON(`https://api.github.com/users/${kagastyarau}`);
 }
