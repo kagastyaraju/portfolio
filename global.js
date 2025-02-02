@@ -81,8 +81,10 @@ export async function fetchJSON(url) {
 }
 
 // Render projects
+// global.js (CORRECTED)
 export function renderProjects(projects, container, headingLevel = 'h2') {
-  containerElement.innerHTML = ''; // Clear existing content
+  if (!container) return; // Add null check
+  container.innerHTML = ''; // Fix variable name (was containerElement)
   projects.forEach(project => {
     const article = document.createElement('article');
     article.innerHTML = `
@@ -94,6 +96,6 @@ export function renderProjects(projects, container, headingLevel = 'h2') {
   });
 }
 
-export async function fetchGitHubData(kagastyaraju) {
-  return fetchJSON(`https://api.github.com/users/${kagastyarau}`);
+export async function fetchGitHubData(username) { // Parameter name fixed
+  return fetchJSON(`https://api.github.com/users/${username}`); // Use correct variable
 }
