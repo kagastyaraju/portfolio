@@ -6,7 +6,7 @@ import { fetchJSON, renderProjects } from '../global.js';
     const projects = await fetchJSON('../lib/projects.json');
     const container = document.querySelector('.projects');
 
-    // Render projects
+    // Render projects (this will include the year now)
     renderProjects(projects, container, 'h2');
 
     // Update project count in the title
@@ -16,7 +16,7 @@ import { fetchJSON, renderProjects } from '../global.js';
     }
   } catch (error) {
     console.error('Error loading projects:', error);
-    document.querySelector('.projects').innerHTML = 
+    document.querySelector('.projects').innerHTML =
       '<p>Failed to load projects. Please try again later.</p>';
   }
 })();

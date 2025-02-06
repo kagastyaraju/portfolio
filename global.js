@@ -81,20 +81,25 @@ export async function fetchJSON(url) {
 }
 
 // Render projects
-// global.js (CORRECTED)
+// global.js
 export function renderProjects(projects, container, headingLevel = 'h2') {
-  if (!container) return; // Add null check
-  container.innerHTML = ''; // Fix variable name (was containerElement)
+  if (!container) return; // Ensure container exists
+  container.innerHTML = ''; // Clear previous content
+
   projects.forEach(project => {
     const article = document.createElement('article');
     article.innerHTML = `
       <${headingLevel}>${project.title}</${headingLevel}>
       <img src="${project.image}" alt="${project.title}">
-      <p>${project.description}</p>
+      <div class="project-details">
+        <p class="project-description">${project.description}</p>
+        <p class="project-year">${project.year}</p>
+      </div>
     `;
     container.appendChild(article);
   });
 }
+
 
 export async function fetchGitHubData(username) { // Parameter name fixed
   return fetchJSON(`https://api.github.com/users/${username}`); // Use correct variable

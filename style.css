@@ -249,3 +249,13 @@ section ul li {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+.project-year {
+  font-family: Baskerville, serif;
+  font-variant-numeric: oldstyle-nums;
+  color: gray;
+  font-size: 14px;
+  display: block;
+  margin-top: 5px;
+  text-align: center;
+}

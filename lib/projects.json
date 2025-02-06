@@ -31,43 +31,43 @@
     },
     {
         "title": "Lorem Ipsum Heading",
-        "year": 2024,
+        "year": 2020,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     },
     {
         "title": "Lorem Ipsum Heading",
+        "year": 2022,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    {
+        "title": "dsc10 final project",
+        "year": 2021,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    {
+        "title": "2023 project",
+        "year": 2023,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    {
+        "title": "old project",
+        "year": 2020,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    {
+        "title": "2024 project",
         "year": 2024,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     },
     {
-        "title": "Lorem Ipsum Heading",
-        "year": 2024,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-        "title": "Lorem Ipsum Heading",
-        "year": 2024,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-        "title": "Lorem Ipsum Heading",
-        "year": 2024,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-        "title": "Lorem Ipsum Heading",
-        "year": 2024,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    },
-    {
-        "title": "Lorem Ipsum Heading",
-        "year": 2024,
+        "title": "2025 project",
+        "year": 2025,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     }
