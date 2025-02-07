@@ -5,13 +5,20 @@ let allProjects = [];
 let selectedYear = null;
 let searchQuery = '';
 
-async function init() {
+// Wait for DOM to load before initializing
+document.addEventListener('DOMContentLoaded', async () => {
   try {
-    allProjects = await fetchJSON('../lib/projects.json');
+    // Get DOM elements with null checks
     const container = document.querySelector('.projects');
-    const searchInput = document.querySelector('.search');
+    const searchInput = document.querySelector('#search-input');
     
-    // Initial render
+    if (!container) throw new Error('Projects container not found');
+    if (!searchInput) throw new Error('Search input not found');
+
+    // Load data
+    allProjects = await fetchJSON('../lib/projects.json');
+    
+    // Initial renders
     updateVisualization(allProjects);
     renderProjects(allProjects, container, 'h2');
 
@@ -22,10 +29,12 @@ async function init() {
       updateVisualization(filtered);
       renderProjects(filtered, container, 'h2');
     });
+
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Initialization Error:', error);
+    document.body.innerHTML = `<p class="error">${error.message}</p>`;
   }
-}
+});
 
 function filterProjects() {
   return allProjects.filter(project => {
@@ -49,8 +58,19 @@ function updateVisualization(projects) {
   }));
 
   // Clear existing elements
-  d3.select('#pie-chart').selectAll('*').remove();
-  d3.select('.legend').selectAll('*').remove();
+  const svg = d3.select('#pie-chart');
+  const legend = d3.select('.legend');
+  svg.selectAll('*').remove();
+  legend.selectAll('*').remove();
+
+  // Only render if we have data
+  if (data.length === 0) {
+    svg.append('text')
+      .text('No data to display')
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle');
+    return;
+  }
 
   // Create pie generator
   const pie = d3.pie().value(d => d.value);
@@ -65,8 +85,7 @@ function updateVisualization(projects) {
   const arcs = pie(data);
 
   // Draw pie chart
-  d3.select('#pie-chart')
-    .selectAll('path')
+  svg.selectAll('path')
     .data(arcs)
     .join('path')
     .attr('d', arc)
@@ -79,8 +98,7 @@ function updateVisualization(projects) {
     });
 
   // Create legend
-  const legend = d3.select('.legend')
-    .selectAll('li')
+  legend.selectAll('li')
     .data(data)
     .join('li')
     .attr('class', d => selectedYear === d.label ? 'selected' : null)
@@ -90,11 +108,9 @@ function updateVisualization(projects) {
       const filtered = filterProjects();
       updateVisualization(filtered);
       renderProjects(filtered, document.querySelector('.projects'), 'h2');
-    });
-
-  legend.append('span').attr('class', 'swatch');
-  legend.append('span').text(d => `${d.label} (${d.value})`);
+    })
+    .html(d => `
+      <span class="swatch"></span>
+      <span class="legend-text">${d.label} (${d.value})</span>
+    `);
 }
-
-// Initialize the app
-init();

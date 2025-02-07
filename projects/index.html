@@ -8,11 +8,26 @@
 </head>
 <body>
   <h1 class="projects-title">My Projects</h1>
+
+  <!-- Changed order - search bar first -->
+  <div class="viz-container">
+    <input type="search" 
+           class="search-bar"  <!-- Changed class name -->
+           id="search-input"   <!-- Added ID -->
+           placeholder="Search projects..."
+           aria-label="Search projects">
+    
+    <div class="chart-container">
+      <svg id="pie-chart" viewBox="-50 -50 100 100"></svg>
+      <ul class="legend"></ul>
+    </div>
+  </div>
+
   <div class="projects">
     <!-- Projects will be dynamically inserted here by JavaScript -->
   </div>
 
-  <!-- Load global.js first -->
+  <!-- Scripts moved to VERY BOTTOM -->
   <script src="../global.js" type="module"></script>
   <script src="projects.js" type="module"></script>
 </body>
