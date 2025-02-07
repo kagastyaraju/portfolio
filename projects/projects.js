@@ -1,4 +1,3 @@
-// In projects.js
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm";
 import { fetchJSON, renderProjects } from '../global.js';
 
@@ -8,97 +7,149 @@ let searchQuery = '';
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // 1. Get DOM elements with explicit error checking
-    const searchInput = document.getElementById('search-input');
-    const projectsContainer = document.querySelector('.projects');
-    
-    if (!searchInput) throw new Error('Search input not found - check HTML ID');
-    if (!projectsContainer) throw new Error('Projects container not found');
+    const elements = {
+      searchInput: document.getElementById('search-input'),
+      projectsContainer: document.querySelector('.projects'),
+      pieChart: document.getElementById('pie-chart'),
+      legendContainer: document.querySelector('.legend')
+    };
 
-    // 2. Load data
-    allProjects = await fetchJSON('../lib/projects.json');
-    
-    // 3. Initial render
-    updateVisualization(allProjects);
-    renderProjects(allProjects, projectsContainer, 'h2');
-
-    // 4. Search functionality with debouncing
-    searchInput.addEventListener('input', (e) => {
-      searchQuery = e.target.value.toLowerCase().trim();
-      console.log('Search query:', searchQuery); // Debug log
-      
-      const filtered = allProjects.filter(project => {
-        const projectValues = Object.values(project)
-          .join(' ')
-          .toLowerCase();
-        return projectValues.includes(searchQuery);
-      });
-      
-      updateVisualization(filtered);
-      renderProjects(filtered, projectsContainer, 'h2');
+    Object.entries(elements).forEach(([name, element]) => {
+      if (!element) throw new Error(`${name} element not found`);
     });
 
+    allProjects = await fetchJSON('../lib/projects.json');
+    initializeVisualization(elements);
+
   } catch (error) {
-    console.error('Initialization Error:', error);
-    document.body.innerHTML = `<p class="error">${error.message}</p>`;
+    handleInitializationError(error);
   }
 });
 
-function updateVisualization(projects) {
-  // 1. Clear previous elements
-  const svg = d3.select('#pie-chart');
-  const legend = d3.select('.legend');
-  svg.selectAll('*').remove();
-  legend.selectAll('*').remove();
+function initializeVisualization({ searchInput, projectsContainer, pieChart, legendContainer }) {
+  updateVisualization(allProjects, pieChart, legendContainer);
+  renderProjects(allProjects, projectsContainer, 'h2');
 
-  // 2. Process data
+  searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    const filtered = filterProjects();
+    updateVisualization(filtered, pieChart, legendContainer);
+    renderProjects(filtered, projectsContainer, 'h2');
+  });
+}
+
+function filterProjects() {
+  return allProjects.filter(project => {
+    const searchMatch = Object.values(project)
+      .join(' ')
+      .toLowerCase()
+      .includes(searchQuery);
+      
+    const yearMatch = !selectedYear || project.year === selectedYear;
+    
+    return searchMatch && yearMatch;
+  });
+}
+
+function updateVisualization(projects, pieChart, legendContainer) {
+  const svg = d3.select(pieChart);
+  const legend = d3.select(legendContainer);
+  
+  // Clear existing elements with transitions
+  svg.selectAll('*').transition().duration(300).remove();
+  legend.selectAll('*').transition().duration(300).remove();
+
+  // Process year data
   const yearData = d3.rollups(
     projects,
     v => v.length,
-    d => d.year
+    d => d.year.toString() // Maintain year as string for consistency
   ).map(([year, count]) => ({
     value: count,
-    label: String(year)
+    label: year
   }));
 
-  // 3. Create smaller pie chart (radius 35)
+  // Handle empty state
+  if (yearData.length === 0) {
+    svg.append('text')
+      .text('No projects found')
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle');
+    return;
+  }
+
+  // Create stable color scale
+  const colorScale = d3.scaleOrdinal()
+    .domain(yearData.map(d => d.label))
+    .range(d3.schemeTableau10);
+
+  // Pie chart configuration
   const pie = d3.pie().value(d => d.value);
   const arc = d3.arc()
     .innerRadius(0)
-    .outerRadius(35); // Reduced size
+    .outerRadius(35)
+    .cornerRadius(2) // Smoother edges
+    .padAngle(0.015); // Add spacing between slices
 
-  const color = d3.scaleOrdinal(d3.schemeTableau10);
+  // Animated transitions for pie chart
   const arcs = pie(yearData);
-
-  // 4. Draw paths
+  
   svg.selectAll('path')
     .data(arcs)
-    .join('path')
-    .attr('d', arc)
-    .attr('fill', (_, i) => color(i))
-    .on('click', (_, d) => {
-      selectedYear = selectedYear === d.data.label ? null : d.data.label;
-      const filtered = allProjects.filter(p => 
-        !selectedYear || p.year === selectedYear
-      );
-      renderProjects(filtered, document.querySelector('.projects'), 'h2');
-      updateVisualization(filtered);
-    });
+    .join(
+      enter => enter.append('path')
+        .attr('d', arc)
+        .attr('fill', d => colorScale(d.data.label))
+        .attr('opacity', 0)
+        .call(enter => enter.transition().duration(500).attr('opacity', 1)),
+      update => update
+        .call(update => update.transition().duration(500)
+          .attr('d', arc)
+          .attr('fill', d => colorScale(d.data.label))
+        ),
+      exit => exit
+        .call(exit => exit.transition().duration(300).attr('opacity', 0).remove())
+    )
+    .on('click', (event, d) => handleYearFilter(d.data.label));
 
-  // 5. Create legend
+  // Interactive legend
   legend.selectAll('li')
     .data(yearData)
-    .join('li')
+    .join(
+      enter => enter.append('li')
+        .style('opacity', 0)
+        .call(enter => enter.transition().duration(500).style('opacity', 1)),
+      update => update,
+      exit => exit.transition().duration(300).style('opacity', 0).remove()
+    )
     .html(d => `
-      <span class="swatch" style="background:${color(d.label)}"></span>
+      <span class="swatch" style="background:${colorScale(d.label)}"></span>
       ${d.label} (${d.value})
     `)
-    .on('click', (_, d) => {
-      selectedYear = selectedYear === d.label ? null : d.label;
-      const filtered = allProjects.filter(p => 
-        !selectedYear || p.year === selectedYear
-      );
-      renderProjects(filtered, document.querySelector('.projects'), 'h2');
-      updateVisualization(filtered);
-    });
+    .on('click', (event, d) => handleYearFilter(d.label));
+}
+
+function handleYearFilter(year) {
+  // Convert year string to number for comparison
+  const yearNumber = parseInt(year, 10);
+  selectedYear = selectedYear === yearNumber ? null : yearNumber;
+  
+  const filtered = filterProjects();
+  updateVisualization(
+    filtered,
+    document.getElementById('pie-chart'),
+    document.querySelector('.legend')
+  );
+  renderProjects(filtered, document.querySelector('.projects'), 'h2');
+}
+
+function handleInitializationError(error) {
+  console.error('Initialization Error:', error);
+  document.body.innerHTML = `
+    <div class="error">
+      <h2>Error Loading Content</h2>
+      <p>${error.message}</p>
+      <p>Please check your network connection and try again</p>
+    </div>
+  `;
 }
