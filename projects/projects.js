@@ -5,46 +5,56 @@ let allProjects = [];
 let selectedYear = null;
 let searchQuery = '';
 
-// Wait for DOM to load before initializing
+// Wait for DOM to load first
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // Get DOM elements with null checks
-    const container = document.querySelector('.projects');
-    const searchInput = document.querySelector('#search-input');
+    // Get elements with null checks
+    const searchInput = document.getElementById('search-input');
+    const projectsContainer = document.querySelector('.projects');
+    const pieChartSvg = document.getElementById('pie-chart');
     
-    if (!container) throw new Error('Projects container not found');
-    if (!searchInput) throw new Error('Search input not found');
+    if (!searchInput) throw new Error('Search input element not found');
+    if (!projectsContainer) throw new Error('Projects container not found');
+    if (!pieChartSvg) throw new Error('Pie chart SVG not found');
 
     // Load data
     allProjects = await fetchJSON('../lib/projects.json');
     
-    // Initial renders
+    // Initial render
     updateVisualization(allProjects);
-    renderProjects(allProjects, container, 'h2');
+    renderProjects(allProjects, projectsContainer, 'h2');
 
     // Search functionality
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value.toLowerCase();
       const filtered = filterProjects();
       updateVisualization(filtered);
-      renderProjects(filtered, container, 'h2');
+      renderProjects(filtered, projectsContainer, 'h2');
     });
 
   } catch (error) {
     console.error('Initialization Error:', error);
-    document.body.innerHTML = `<p class="error">${error.message}</p>`;
+    document.body.innerHTML = `<p class="error">${error.message}. Check console for details.</p>`;
   }
 });
 
 function filterProjects() {
   return allProjects.filter(project => {
-    const matchesSearch = Object.values(project).join(' ').toLowerCase().includes(searchQuery);
-    const matchesYear = !selectedYear || project.year === selectedYear;
-    return matchesSearch && matchesYear;
+    const searchString = Object.values(project)
+      .join(' ')
+      .toLowerCase();
+    return searchString.includes(searchQuery) && 
+      (!selectedYear || project.year === selectedYear);
   });
 }
 
 function updateVisualization(projects) {
+  // Clear existing elements
+  const svg = d3.select('#pie-chart');
+  const legend = d3.select('.legend');
+  svg.selectAll('*').remove();
+  legend.selectAll('*').remove();
+
   // Process data
   const yearCounts = d3.rollups(
     projects,
@@ -52,36 +62,27 @@ function updateVisualization(projects) {
     d => d.year
   );
 
-  const data = yearCounts.map(([year, count]) => ({
-    value: count,
-    label: String(year)
-  }));
-
-  // Clear existing elements
-  const svg = d3.select('#pie-chart');
-  const legend = d3.select('.legend');
-  svg.selectAll('*').remove();
-  legend.selectAll('*').remove();
-
-  // Only render if we have data
-  if (data.length === 0) {
+  // Handle empty state
+  if (yearCounts.length === 0) {
     svg.append('text')
-      .text('No data to display')
+      .text('No projects found')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle');
     return;
   }
 
-  // Create pie generator
+  // Create visualization elements
+  const data = yearCounts.map(([year, count]) => ({
+    value: count,
+    label: String(year)
+  }));
+
   const pie = d3.pie().value(d => d.value);
   const arc = d3.arc()
     .innerRadius(0)
-    .outerRadius(45);
+    .outerRadius(40); // Reduced size
 
-  // Color scale
   const color = d3.scaleOrdinal(d3.schemeTableau10);
-
-  // Create arcs
   const arcs = pie(data);
 
   // Draw pie chart
@@ -90,12 +91,7 @@ function updateVisualization(projects) {
     .join('path')
     .attr('d', arc)
     .attr('fill', (_, i) => color(i))
-    .on('click', (_, d) => {
-      selectedYear = selectedYear === d.data.label ? null : d.data.label;
-      const filtered = filterProjects();
-      updateVisualization(filtered);
-      renderProjects(filtered, document.querySelector('.projects'), 'h2');
-    });
+    .on('click', (_, d) => handleYearSelect(d.data.label));
 
   // Create legend
   legend.selectAll('li')
@@ -103,14 +99,16 @@ function updateVisualization(projects) {
     .join('li')
     .attr('class', d => selectedYear === d.label ? 'selected' : null)
     .style('color', (_, i) => color(i))
-    .on('click', (_, d) => {
-      selectedYear = selectedYear === d.label ? null : d.label;
-      const filtered = filterProjects();
-      updateVisualization(filtered);
-      renderProjects(filtered, document.querySelector('.projects'), 'h2');
-    })
+    .on('click', (_, d) => handleYearSelect(d.label))
     .html(d => `
       <span class="swatch"></span>
-      <span class="legend-text">${d.label} (${d.value})</span>
+      ${d.label} (${d.value})
     `);
+}
+
+function handleYearSelect(year) {
+  selectedYear = selectedYear === year ? null : year;
+  const filtered = filterProjects();
+  updateVisualization(filtered);
+  renderProjects(filtered, document.querySelector('.projects'), 'h2');
 }

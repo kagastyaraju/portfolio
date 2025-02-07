@@ -259,3 +259,101 @@ section ul li {
   margin-top: 5px;
   text-align: center;
 }
+
+
+
+/* Pie chart styling */
+.viz-container {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-container {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+#pie-chart {
+  max-width: 300px;
+  flex-shrink: 0;
+}
+
+.legend {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+  flex-grow: 1;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.swatch {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+path {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.selected {
+  outline: 2px solid black;
+}
+
+/* Pie Chart Sizing */
+#pie-chart {
+  width: 250px;
+  height: 250px;
+  margin: 1rem auto;
+}
+
+/* Search Input Styling */
+#search-input {
+  width: 80%;
+  max-width: 400px;
+  padding: 0.8rem;
+  margin: 1rem auto;
+  display: block;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  font-size: 1rem;
+}
+
+/* Legend Styling */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 0;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.swatch {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}

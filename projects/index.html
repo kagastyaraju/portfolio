@@ -9,12 +9,11 @@
 <body>
   <h1 class="projects-title">My Projects</h1>
 
-  <!-- Changed order - search bar first -->
   <div class="viz-container">
+    <!-- Changed to use ID instead of class -->
     <input type="search" 
-           class="search-bar"  <!-- Changed class name -->
-           id="search-input"   <!-- Added ID -->
-           placeholder="Search projects..."
+           id="search-input"
+           placeholder="🔍 Search projects..."
            aria-label="Search projects">
     
     <div class="chart-container">
@@ -27,7 +26,7 @@
     <!-- Projects will be dynamically inserted here by JavaScript -->
   </div>
 
-  <!-- Scripts moved to VERY BOTTOM -->
+  <!-- Scripts MUST be at the BOTTOM -->
   <script src="../global.js" type="module"></script>
   <script src="projects.js" type="module"></script>
 </body>
