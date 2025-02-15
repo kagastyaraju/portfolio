@@ -404,3 +404,18 @@ path {
   height: 1rem;
   border-radius: 50%;
 }
+
+.stats {
+  display: grid;
+  grid-template-columns: max-content auto;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+.stats dt {
+  font-weight: bold;
+}
+
+.stats dd {
+  margin: 0;
+}
