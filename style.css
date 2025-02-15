@@ -419,3 +419,10 @@ path {
 .stats dd {
   margin: 0;
 }
+
+
+.gridlines line {
+  stroke: #ccc;  /* Light gray color */
+  stroke-dasharray: 4 4;  /* Dotted/dashed effect */
+  stroke-opacity: 0.5;  /* Make it less prominent */
+}
