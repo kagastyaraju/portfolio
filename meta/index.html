@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Code Analysis</title>
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8">
+  <title>Code Analysis</title>
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <h1>Codebase Statistics</h1>
-    <div id="stats"></div>
-    <div id="chart"></div>
-    <!-- Load global.js to build the navigation -->
-    <script src="../global.js" type="module"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="main.js" type="module"></script>
-
-
-    <!-- Tooltip for commit information -->
-<dl id="commit-tooltip" class="info tooltip" hidden>
+  <h1>Codebase Statistics</h1>
+  
+  <!-- Container for overall stats -->
+  <div id="stats"></div>
+  
+  <!-- Container for the chart -->
+  <div id="chart"></div>
+  
+  <!-- Tooltip for commit information -->
+  <dl id="commit-tooltip" class="info tooltip" hidden>
     <dt>Commit</dt>
     <dd>
       <a href="" id="commit-link" target="_blank"></a>
     </dd>
     <dt>Date</dt>
     <dd id="commit-date"></dd>
-    <!-- You can add additional rows here for Time, Author, Lines edited, etc. -->
+    <!-- Add additional rows as needed -->
   </dl>
   
   <!-- Display count of selected commits -->
@@ -32,13 +31,9 @@
   <!-- Language breakdown for selected commits -->
   <dl id="language-breakdown" class="stats"></dl>
   
-  <!-- Container for overall stats -->
-  <div id="stats"></div>
-  
-  <!-- Container for the chart -->
-  <div id="chart"></div>
-  
+  <!-- Load scripts -->
+  <script src="../global.js" type="module"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="main.js" type="module"></script>
 </body>
 </html>
-
-
