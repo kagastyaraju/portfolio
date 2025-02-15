@@ -426,3 +426,62 @@ path {
   stroke-dasharray: 4 4;  /* Dotted/dashed effect */
   stroke-opacity: 0.5;  /* Make it less prominent */
 }
+
+
+
+
+/* Style for info elements (tooltips or stats lists) */
+dl.info {
+  display: grid;
+  grid-template-columns: max-content auto;
+  gap: 0.25em 0.5em;
+  margin: 0;
+  padding: 0.5em;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+/* Tooltip positioning */
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+}
+
+/* Hide tooltip when not active */
+dl.info[hidden]:not(:hover):not(:focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Circle hover styles */
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+circle:hover {
+  transform: scale(1.5);
+}
+
+/* Selected dot style */
+circle.selected {
+  fill: #ff6b6b;
+}
+
+/* Brush selection rectangle styling */
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+.selection {
+  fill-opacity: 0.1;
+  stroke: black;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}

@@ -13,5 +13,32 @@
     <script src="../global.js" type="module"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="main.js" type="module"></script>
+
+
+    <!-- Tooltip for commit information -->
+<dl id="commit-tooltip" class="info tooltip" hidden>
+    <dt>Commit</dt>
+    <dd>
+      <a href="" id="commit-link" target="_blank"></a>
+    </dd>
+    <dt>Date</dt>
+    <dd id="commit-date"></dd>
+    <!-- You can add additional rows here for Time, Author, Lines edited, etc. -->
+  </dl>
+  
+  <!-- Display count of selected commits -->
+  <p id="selection-count">No commits selected</p>
+  
+  <!-- Language breakdown for selected commits -->
+  <dl id="language-breakdown" class="stats"></dl>
+  
+  <!-- Container for overall stats -->
+  <div id="stats"></div>
+  
+  <!-- Container for the chart -->
+  <div id="chart"></div>
+  
 </body>
 </html>
+
+
